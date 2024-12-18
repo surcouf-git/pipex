@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putdec.c                                        :+:      :+:    :+:   */
+/*   global_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mvannest <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/02 13:17:36 by mvannest          #+#    #+#             */
-/*   Updated: 2024/11/02 15:03:36 by mvannest         ###   ########.fr       */
+/*   Created: 2024/12/18 17:06:23 by mvannest          #+#    #+#             */
+/*   Updated: 2024/12/18 17:09:22 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "pipex.h"
 
-int	ft_putdec(int nb)
+int	ft_strncmp(char *argv , char *str, int nb)
 {
 	int	i;
 
-	i = ft_putnbr(nb);
-	return (i);
-}
-/*
-#include <stdio.h>
-int main()
-{
-	int i;
-	
-	i = ft_putdec(15648);
-	printf("\n%d", i);
+	i = 0;
+	while (argv[i] && i < 5)
+	{
+		if (argv[i] != str[i])
+			return (1);
+		i++;
+	}
 	return (0);
-}*/
+}

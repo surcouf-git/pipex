@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 18:54:14 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/18 14:01:46 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/18 17:39:12 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ char	**parse_flags(char **argv, int cmd)
 		return (NULL);
 	return (flags);
 }
+
 int	*count_flags(char **flags_cmd1,char **flags_cmd2)
 {
 	int	*count;
