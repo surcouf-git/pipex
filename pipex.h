@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:33:24 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/18 17:10:17 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/18 22:56:57 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <string.h>
 # include <stdio.h>
 #include <fcntl.h>
-# include "printf/ft_printf.h"
 
 char 	*ft_strjoin_bin(char *str, char *join);
 int		ft_strlen(char *str);
@@ -30,7 +29,8 @@ void	free_all(char **tab);
  * UTILS
  */
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+char	*real_path(char *cmd, char **envp);
 char	**ft_split(const char *s, char c);
-int	ft_strncmp(char *argv , char *str, int nb);
+int		ft_strncmp(char *argv , char *str, int nb);
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:48 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/18 15:34:55 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/18 22:52:37 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	exec_cmd_1(int fd, char **cmd2, char **envp, int pipefd)
+int	exec_cmd_1(int fd, char **cmd1, char **envp, int pipefd)
 {
 	char	*realpath;
 	(void)fd;
@@ -25,7 +25,7 @@ int	exec_cmd_1(int fd, char **cmd2, char **envp, int pipefd)
 	return (free(realpath), 0);
 }
 
-int	exec_cmd_2(int fd_out, char **cmd1, char **envp, int pipefd)
+int	exec_cmd_2(int fd_out, char **cmd2, char **envp, int pipefd)
 {
 	char	*realpath;
 
@@ -39,9 +39,8 @@ int	exec_cmd_2(int fd_out, char **cmd1, char **envp, int pipefd)
 
 int	exec_cmd(char **cmd1, char **cmd2, char **envp, int fd_in, int fd_out)
 {
-	char	*realpath;
 	int		pipefd[2];
-	__pid_t	pid;
+	pid_t	pid;
 
 	if (pipe(pipefd) == -1)
 		return (perror("Pipe :"), 1);
@@ -50,13 +49,13 @@ int	exec_cmd(char **cmd1, char **cmd2, char **envp, int fd_in, int fd_out)
 		return (perror("Fork :"), 1);
 	if (pid == 0)
 	{
-		close(pipe[0]);
+		close(pipefd[0]);
 		exec_cmd_1(fd_in, cmd1, envp, pipefd[1]);
 	}
 	else
 	{
 		wait(NULL);
-		close(pipe[1]);
+		close(pipefd[1]);
 		exec_cmd_2(fd_out, cmd2, envp, pipefd[0]);
 	}
 	return (0);
@@ -64,15 +63,19 @@ int	exec_cmd(char **cmd1, char **cmd2, char **envp, int fd_in, int fd_out)
 
 int	pipex(char **argv, char **envp, int fd_in, int fd_out)
 {
-	int		*count;
+//	int		*count;
 	char	**flags_cmd1;
 	char	**flags_cmd2;
+	char	*path_checker;
 
 	flags_cmd1 = NULL;
 	flags_cmd2 = NULL;
 	flags_cmd1 = parse_flags(argv, 2);
 	flags_cmd2 = parse_flags(argv, 3);
-	count = count_flags(flags_cmd1, flags_cmd2);
+//	count = count_flags(flags_cmd1, flags_cmd2);
+	path_checker = real_path(flags_cmd2[0], envp);
+	if (!path_checker)
+		return (free_all(flags_cmd1), free_all(flags_cmd2), free(path_checker), 1);
 	exec_cmd(flags_cmd1, flags_cmd2, envp, fd_in, fd_out);
 	return (free_all(flags_cmd1), free_all(flags_cmd2), 0);
 }
@@ -87,7 +90,7 @@ int main(int argc, char **argv, char **envp)
 	fd_in = open(argv[1], O_RDONLY);
 	fd_out = open(argv[5], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_in == -1)
-		return (perror(argv[1]));
-	pipex(argv, fd_in, fd_out, envp);
+		return (perror(argv[1]), 1);
+	pipex(argv, envp, fd_in, fd_out);
 	return (EXIT_SUCCESS);
 }
