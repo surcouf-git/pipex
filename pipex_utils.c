@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 18:54:14 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/18 22:56:16 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:27:42 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,14 @@ char *ft_strjoin_bin(char *str, char *join)
 
 	i = ft_strlen(str);
 	o = ft_strlen(join);
-	new_line = malloc((i + o + 1) * sizeof(char));
+	new_line = malloc((i + o + 2) * sizeof(char));
 	if (!new_line)
 		return (NULL);
 	o = 0;
 	i = 0;
 	while (str[i])
 		new_line[i++] = str[o++];
+	new_line[i++] = '/';
 	o = 0;
 	while (join[o])
 	{
@@ -48,6 +49,7 @@ char *ft_strjoin_bin(char *str, char *join)
 	new_line[i + o] = '\0';
 	return (new_line);
 }
+
 
 char	**parse_flags(char **argv, int cmd)
 {
