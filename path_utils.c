@@ -6,17 +6,19 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 16:51:18 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/19 15:11:59 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:45:46 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	*check_access(char **path, char *realpath, char *cmd)
+char	*check_access(char **path, char *cmd)
 {
-	int	i;
+	int		i;
+	char	*realpath;
 
 	i = 1;
+	realpath = NULL;
 	while (path[i++])
 	{
 		realpath = ft_strjoin_bin(path[i], cmd);
@@ -24,7 +26,7 @@ char	*check_access(char **path, char *realpath, char *cmd)
 			return (realpath);
 		free(realpath);
 	}
-	return (free(realpath), NULL);
+	return (NULL);
 }
 
 char	*real_path(char *cmd, char **envp)
@@ -46,7 +48,7 @@ char	*real_path(char *cmd, char **envp)
 	}
 	if (!path)
 		return (NULL);
-	realpath = check_access(path, realpath, cmd);
+	realpath = check_access(path, cmd);
 	return (free_all(path), realpath);
 }
 
