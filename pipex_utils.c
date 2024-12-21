@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 18:54:14 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/21 13:55:20 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/21 15:44:07 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char *ft_strjoin_bin(char *str, char *join)
+char	*ft_strjoin_bin(char *str, char *join)
 {
-	if (!str || !join)
-		return (NULL);
 	char	*new_line;
 	int		i;
 	int		o;
 
+	if (!str || !join)
+		return (NULL);
 	i = ft_strlen(str);
 	o = ft_strlen(join);
 	new_line = malloc((i + o + 2) * sizeof(char));
@@ -50,10 +50,10 @@ char *ft_strjoin_bin(char *str, char *join)
 	return (new_line);
 }
 
-
 char	**parse_flags(char **argv, int cmd)
 {
 	char	**flags;
+
 	flags = ft_split(argv[cmd], ' ');
 	if (!flags)
 		return (NULL);

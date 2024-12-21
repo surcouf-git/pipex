@@ -6,13 +6,13 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:06:23 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/21 11:53:40 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/21 15:41:39 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	ft_strncmp(char *argv , char *str, int nb)
+int	ft_strncmp(char *argv, char *str, int nb)
 {
 	int	i;
 
@@ -33,7 +33,7 @@ int	ft_putstr(char *str)
 	if (!str)
 		return (0);
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
 		write(1, &str[i], 1);
 		i++;

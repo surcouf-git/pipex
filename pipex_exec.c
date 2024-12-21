@@ -6,13 +6,14 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 16:39:56 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/21 15:36:43 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/21 15:43:08 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static int	exec_cmd_1(int fd_in, char **cmd1, char *path, char **envp, int pipefd)
+static int	exec_cmd_1(int fd_in, char **cmd1, char *path,
+						char **envp, int pipefd)
 {
 	if (dup2(fd_in, STDIN_FILENO) < 0)
 		return (close(pipefd), close(fd_in), 1);
@@ -24,7 +25,8 @@ static int	exec_cmd_1(int fd_in, char **cmd1, char *path, char **envp, int pipef
 	return (0);
 }
 
-static int	exec_cmd_2(int fd_out, char **cmd2, char *path, char **envp, int pipefd)
+static int	exec_cmd_2(int fd_out, char **cmd2, char *path,
+							char **envp, int pipefd)
 {
 	if (dup2(pipefd, STDIN_FILENO) < 0)
 		return (perror(cmd2[0]), close(fd_out), close(pipefd), 1);
@@ -37,7 +39,8 @@ static int	exec_cmd_2(int fd_out, char **cmd2, char *path, char **envp, int pipe
 	return (0);
 }
 
-static int	exec_fork_cmd2(int fd_out, char **cmd2, char *path2, char **envp, int pipefd)
+static int	exec_fork_cmd2(int fd_out, char **cmd2,
+								char *path2, char **envp, int pipefd)
 {
 	int		status;
 	pid_t	child;
@@ -57,7 +60,8 @@ static int	exec_fork_cmd2(int fd_out, char **cmd2, char *path2, char **envp, int
 	return (0);
 }
 
-int	exec_cmd(char *path_cmd1, char *path_cmd2, char **cmd1, char **cmd2, char **envp, char **argv, int fd_in, int fd_out)
+int	exec_cmd(char *path_cmd1, char *path_cmd2, char **cmd1, char **cmd2,
+				char **envp, char **argv, int fd_in, int fd_out)
 {
 	int		status;
 	int		pipefd[2];

@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:48 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/21 15:26:24 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/21 15:45:02 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,13 @@ static int	pipex(char **argv, char **envp, int fd_in, int fd_out)
 		path_cmd2 = real_path(flags_cmd2[0], envp);
 	if (fd_in != -1)
 		path_cmd1 = real_path(flags_cmd1[0], envp);
-	exec_cmd(path_cmd1, path_cmd2, flags_cmd1, flags_cmd2, envp, argv, fd_in, fd_out);
-	return (free(path_cmd1), free(path_cmd2), free_all(flags_cmd1), free_all(flags_cmd2), 0);
+	exec_cmd(path_cmd1, path_cmd2, flags_cmd1,
+		flags_cmd2, envp, argv, fd_in, fd_out);
+	return (free(path_cmd1), free(path_cmd2),
+		free_all(flags_cmd1), free_all(flags_cmd2), 0);
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	int	fd_in;
 	int	fd_out;
