@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:33:24 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/21 20:14:34 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/21 20:17:15 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ typedef struct s_list
 char	**parse_flags(char **argv, int cmd);
 char	*ft_strjoin_bin(char *str, char *join);
 int		ft_strlen(char *str);
-//int		exec_cmd(char *path_cmd1, char *path_cmd2, char **cmd1, char **cmd2,
-//			char **envp, char **argv, int fd_in, int fd_out);
 void	free_all(char **tab);
 int		exec_cmd_1(t_list *node);
 int		exec_cmd_2(t_list *node);
