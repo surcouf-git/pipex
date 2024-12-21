@@ -6,39 +6,52 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 16:39:56 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/21 15:43:08 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/21 20:13:02 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static int	exec_cmd_1(int fd_in, char **cmd1, char *path,
-						char **envp, int pipefd)
+int	exec_cmd_1(t_list *node)
 {
-	if (dup2(fd_in, STDIN_FILENO) < 0)
-		return (close(pipefd), close(fd_in), 1);
-	close(fd_in);
-	if (dup2(pipefd, STDOUT_FILENO) < 0)
-		return (close(pipefd), 1);
-	close(pipefd);
-	execve(path, cmd1, envp);
+	pid_t	fork_id;
+
+	if (node->fd_in == -1)
+		return (close(node->pipefd1), perror(node->argv[1]), 1);
+	fork_id  = fork();
+	if (fork_id == 0)
+	{
+		if (dup2(node->fd_in, STDIN_FILENO) < 0)
+			return (close(node->pipefd1), close(node->fd_in), 1);
+		close(node->fd_in);
+		if (dup2(node->pipefd1, STDOUT_FILENO) < 0)
+			return (close(node->pipefd1), 1);
+		close(node->pipefd1);
+		execve(node->path_cmd1, node->cmd_1_options, node->envp);
+	}
 	return (0);
 }
 
-static int	exec_cmd_2(int fd_out, char **cmd2, char *path,
-							char **envp, int pipefd)
+int	exec_cmd_2(t_list *node)
 {
-	if (dup2(pipefd, STDIN_FILENO) < 0)
-		return (perror(cmd2[0]), close(fd_out), close(pipefd), 1);
-	if (dup2(fd_out, STDOUT_FILENO) < 0)
-		return (perror(cmd2[0]), close(fd_out), close(pipefd), 1);
-	close(fd_out);
-	close (pipefd);
-	if (execve(path, cmd2, envp) == -1)
-		perror(cmd2[0]);
+	pid_t	fork_id;
+	if (node->fd_out == -1)
+		return (close(node->pipefd0), perror(node->argv[5]), 1);
+	if (dup2(node->pipefd0, STDIN_FILENO) < 0)
+		return (perror(node->cmd_2_options[0]), close(node->fd_out), close(node->pipefd0), 1);
+	close(node->pipefd1);
+	if (dup2(node->fd_out, STDOUT_FILENO) < 0)
+		return (perror(node->cmd_2_options[0]), close(node->fd_out), close(node->pipefd0), 1);
+	close(node->fd_out);
+	close (node->pipefd0);
+	fork_id = fork();
+	if (fork_id == -1)
+		return (perror("Fork"), 1);
+	if (execve(node->path_cmd2, node->cmd_2_options, node->envp) == -1)
+		perror(node->cmd_2_options[0]);
 	return (0);
 }
-
+/*
 static int	exec_fork_cmd2(int fd_out, char **cmd2,
 								char *path2, char **envp, int pipefd)
 {
@@ -58,8 +71,8 @@ static int	exec_fork_cmd2(int fd_out, char **cmd2,
 	else
 		wait (&status);
 	return (0);
-}
-
+}*/
+/*
 int	exec_cmd(char *path_cmd1, char *path_cmd2, char **cmd1, char **cmd2,
 				char **envp, char **argv, int fd_in, int fd_out)
 {
@@ -87,4 +100,4 @@ int	exec_cmd(char *path_cmd1, char *path_cmd2, char **cmd1, char **cmd2,
 		exec_fork_cmd2(fd_out, cmd2, path_cmd2, envp, pipefd[0]);
 	}
 	return (0);
-}
+}*/
