@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:06:23 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/18 22:27:56 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/21 11:53:40 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,19 @@ int	ft_strncmp(char *argv , char *str, int nb)
 		i++;
 	}
 	return (0);
+}
+
+int	ft_putstr(char *str)
+{
+	int	i;
+
+	if (!str)
+		return (0);
+	i = 0;
+	while(str[i])
+	{
+		write(1, &str[i], 1);
+		i++;
+	}
+	return (i);
 }

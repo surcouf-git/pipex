@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 16:39:56 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/20 18:47:45 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/21 15:36:43 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ static int	exec_cmd_1(int fd_in, char **cmd1, char *path, char **envp, int pipef
 	if (dup2(pipefd, STDOUT_FILENO) < 0)
 		return (close(pipefd), 1);
 	close(pipefd);
-	if (execve(path, cmd1, envp) == -1)
-		return (perror(cmd1[0]), 1);
+	execve(path, cmd1, envp);
 	return (0);
 }
 
@@ -43,7 +42,9 @@ static int	exec_fork_cmd2(int fd_out, char **cmd2, char *path2, char **envp, int
 	int		status;
 	pid_t	child;
 
-	child = fork();
+	child = 2;
+	if (path2 && fd_out != -1)
+		child = fork();
 	if (child == -1)
 		return (close(pipefd), perror("Fork"), 1);
 	if (child == 0)
@@ -56,15 +57,17 @@ static int	exec_fork_cmd2(int fd_out, char **cmd2, char *path2, char **envp, int
 	return (0);
 }
 
-int	exec_cmd(char *path_cmd1, char *path_cmd2, char **cmd1, char **cmd2, char **envp, int fd_in, int fd_out)
+int	exec_cmd(char *path_cmd1, char *path_cmd2, char **cmd1, char **cmd2, char **envp, char **argv, int fd_in, int fd_out)
 {
 	int		status;
 	int		pipefd[2];
 	pid_t	child;
 
+	child = 2;
 	if (pipe(pipefd) == -1)
 		return (perror("Pipe"), 1);
-	child = fork();
+	if (path_cmd1 && open(argv[1], O_RDONLY) != -1)
+		child = fork();
 	if (child == -1)
 		return (close(pipefd[0]), close(pipefd[1]), perror("Fork"), 1);
 	if (child == 0)
@@ -73,7 +76,7 @@ int	exec_cmd(char *path_cmd1, char *path_cmd2, char **cmd1, char **cmd2, char **
 		exec_cmd_1(fd_in, cmd1, path_cmd1, envp, pipefd[1]);
 		exit(0);
 	}
-	else
+	else if (path_cmd2 != NULL)
 	{
 		wait(&status);
 		close(pipefd[1]);
