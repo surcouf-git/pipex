@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:33:24 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/21 20:17:15 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/22 10:33:18 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ typedef struct s_list
 {
 	char	**argv;
 	char	**envp;
-	char	**cmd_1_options;
-	char	**cmd_2_options;
+	char	**cmd_1_opt;
+	char	**cmd_2_opt;
 	char	*path_cmd1;
 	char	*path_cmd2;
 	char	*outfile;

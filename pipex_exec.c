@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 16:39:56 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/21 20:43:28 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/22 15:36:55 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,50 +15,47 @@
 int	exec_cmd_1(t_list *node)
 {
 	pid_t	fork_id;
-//	int		status;
+	int		status;
 
-	if (node->fd_in == -1)
-		return (close(node->pipefd1), perror(node->argv[1]), 1);
-	fork_id  = fork();
+	fork_id = fork();
 	if (fork_id == 0)
 	{
-		if (dup2(node->fd_in, STDIN_FILENO) < 0)
-			return (close(node->pipefd1), close(node->fd_in), 1);
+		close(node->pipefd0);
+		dup2(node->fd_in, STDIN_FILENO);
+		dup2(node->pipefd1, STDOUT_FILENO);
 		close(node->fd_in);
-		if (dup2(node->pipefd1, STDOUT_FILENO) < 0)
-			return (close(node->pipefd1), 1);
 		close(node->pipefd1);
-		execve(node->path_cmd1, node->cmd_1_options, node->envp);
+		execve(node->path_cmd1, node->cmd_1_opt, node->envp);
+		perror(node->cmd_1_opt[0]);
+		exit(EXIT_FAILURE);
 	}
-//	else
-//		wait(&status);
+	else if (fork_id > 0)
+		waitpid(fork_id, &status, 0);
+	else
+		perror("Fork");
 	return (0);
 }
 
 int	exec_cmd_2(t_list *node)
 {
 	pid_t	fork_id;
-	int		status;
+//	int		status;
 
-	if (node->fd_out == -1)
-		return (close(node->pipefd0), perror(node->argv[5]), 1);
 	fork_id = fork();
-	if (fork_id == -1)
-		return (perror("Fork"), 1);
 	if (fork_id == 0)
 	{
-		if (dup2(node->pipefd0, STDIN_FILENO) < 0)
-			return (perror(node->cmd_2_options[0]), close(node->fd_out), close(node->pipefd0), 1);
 		close(node->pipefd1);
-		if (dup2(node->fd_out, STDOUT_FILENO) < 0)
-			return (perror(node->cmd_2_options[0]), close(node->fd_out), close(node->pipefd0), 1);
+		dup2(node->pipefd0, STDIN_FILENO);
+		dup2(node->fd_out, STDOUT_FILENO);
+		close(node->pipefd0);
 		close(node->fd_out);
-		close (node->pipefd0);
-		if (execve(node->path_cmd2, node->cmd_2_options, node->envp) == -1)
-			perror(node->cmd_2_options[0]);
+		execve(node->path_cmd2, node->cmd_2_opt, node->envp);
+		perror(node->cmd_2_opt[0]);
+		exit(EXIT_FAILURE);
 	}
+	/*else if (fork_id > 0)
+		wait(&status);*/
 	else
-		wait(&status);
+		perror("Fork");
 	return (0);
 }
-

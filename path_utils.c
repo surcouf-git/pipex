@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 16:51:18 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/21 19:20:55 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/22 12:18:25 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*check_access(char **path, char *cmd)
 		realpath = NULL;
 	}
 	ft_putstr(cmd);
-	ft_putstr(": command not found\n");
+	ft_putstr(":command not found\n");
 	return (NULL);
 }
 
@@ -41,6 +41,10 @@ char	*real_path(char *cmd, char **envp)
 	i = 0;
 	realpath = NULL;
 	path = NULL;
+	if (!cmd)
+		return (NULL);
+	if (access(cmd, X_OK | F_OK) == 0)
+		return (cmd);
 	while (envp[i++])
 	{
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
