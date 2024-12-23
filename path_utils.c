@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 16:51:18 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/22 12:18:25 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/23 14:07:55 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,5 +56,5 @@ char	*real_path(char *cmd, char **envp)
 	if (!path)
 		return (NULL);
 	realpath = check_access(path, cmd);
-	return (free_all(path), realpath);
+	return (free_all(path), path = NULL, realpath);
 }

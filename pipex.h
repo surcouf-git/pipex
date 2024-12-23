@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:33:24 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/22 10:33:18 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/23 10:50:52 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ char	**parse_flags(char **argv, int cmd);
 char	*ft_strjoin_bin(char *str, char *join);
 int		ft_strlen(char *str);
 void	free_all(char **tab);
-int		exec_cmd_1(t_list *node);
-int		exec_cmd_2(t_list *node);
+int		exec_cmd_1(t_list **node);
+int		exec_cmd_2(t_list **node);
 /*
  * UTILS
  */

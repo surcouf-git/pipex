@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 15:41:09 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/22 13:11:59 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/23 14:46:32 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,11 @@ char	**ft_split(const char *s, char c)
 	size_t		word_count;
 	char		**tableau;
 
+	tableau = NULL;
 	word_count = ft_wordcnt(s, c);
+	printf("%p --- %s\n", tableau, s);
 	tableau = malloc((word_count + 1) * sizeof(char *));
+	printf("%p --- %s\n", tableau, s);
 	if (!tableau)
 		return (NULL);
 	tableau[word_count] = NULL;
