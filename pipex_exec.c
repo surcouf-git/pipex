@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 16:39:56 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/22 15:36:55 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/23 16:29:19 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	exec_cmd_1(t_list *node)
 	}
 	else if (fork_id > 0)
 		waitpid(fork_id, &status, 0);
-	else
+	else if (fork_id < 0)
 		perror("Fork");
 	return (0);
 }
@@ -55,7 +55,7 @@ int	exec_cmd_2(t_list *node)
 	}
 	/*else if (fork_id > 0)
 		wait(&status);*/
-	else
+	else if (fork_id < 0)
 		perror("Fork");
 	return (0);
 }

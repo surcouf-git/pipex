@@ -1,1 +1,14 @@
-     14      14     146
+a.out
+ft_split.c
+ft_split_utils.c
+global_utils.c
+infile
+Makefile
+outfile
+outlife
+path_utils.c
+pipex.c
+pipex_exec.c
+pipex.h
+pipex_utils.c
+zbeub.sh

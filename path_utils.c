@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 16:51:18 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/22 12:18:25 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/23 16:36:49 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,27 @@ char	*real_path(char *cmd, char **envp)
 		return (NULL);
 	realpath = check_access(path, cmd);
 	return (free_all(path), realpath);
+}
+
+char	*ft_strdup(char *str)
+{
+	char	*ptr;
+	int		i;
+
+	i = 0;
+	if (!str)
+		return (NULL);
+	while (str[i])
+		i++;
+	ptr = malloc((i + 1) * sizeof(char));
+	if (!ptr)
+		return (NULL);
+	i = 0;
+	while (str[i])
+	{
+		ptr[i] = str[i];
+		i++;
+	}
+	ptr[i] = '\0';
+	return (ptr);
 }
