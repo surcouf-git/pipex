@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 18:54:14 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/23 10:25:30 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/24 18:38:11 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,6 @@ char	*ft_strjoin_bin(char *str, char *join)
 	return (new_line);
 }
 
-char	**parse_flags(char **argv, int cmd)
-{
-	char	**flags;
-
-	flags = ft_split(argv[cmd], ' ');
-	if (!flags)
-		return (NULL);
-	return (flags);
-}
-
 void	free_all(char **tab)
 {
 	int	i;
@@ -68,9 +58,17 @@ void	free_all(char **tab)
 	while (tab[i])
 	{
 		free(tab[i]);
-		tab[i] = NULL;
 		i++;
 	}
 	free(tab);
-	tab = NULL;
+}
+
+void	close_wait_and_check_status(t_list **node)
+{
+	close((*node)->pipefd0);
+	close((*node)->pipefd1);
+	waitpid((*node)->fork_1_id, &(*node)->status_1, 0);
+	waitpid((*node)->fork_2_id, &(*node)->status_2, 0);
+	close((*node)->fd_in);
+	close((*node)->fd_out);
 }

@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 16:51:18 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/23 14:07:55 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/24 17:55:24 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ char	*check_access(char **path, char *cmd)
 	{
 		realpath = ft_strjoin_bin(path[i], cmd);
 		if (realpath && access(realpath, X_OK | F_OK) == 0)
-			return (realpath);
+			return (free(cmd), realpath);
 		free(realpath);
 		realpath = NULL;
 	}
 	ft_putstr(cmd);
 	ft_putstr(":command not found\n");
-	return (NULL);
+	return (free(cmd), NULL);
 }
 
 char	*real_path(char *cmd, char **envp)
@@ -43,7 +43,7 @@ char	*real_path(char *cmd, char **envp)
 	path = NULL;
 	if (!cmd)
 		return (NULL);
-	if (access(cmd, X_OK | F_OK) == 0)
+	if ((access(cmd, X_OK | F_OK | R_OK)) == 0)
 		return (cmd);
 	while (envp[i++])
 	{
@@ -56,5 +56,28 @@ char	*real_path(char *cmd, char **envp)
 	if (!path)
 		return (NULL);
 	realpath = check_access(path, cmd);
-	return (free_all(path), path = NULL, realpath);
+	return (free_all(path), realpath);
+}
+
+char	*ft_strdup(char *str)
+{
+	char	*ptr;
+	int		i;
+
+	i = 0;
+	if (!str)
+		return (NULL);
+	while (str[i])
+		i++;
+	ptr = malloc((i + 1) * sizeof(char));
+	if (!ptr)
+		return (NULL);
+	i = 0;
+	while (str[i])
+	{
+		ptr[i] = str[i];
+		i++;
+	}
+	ptr[i] = '\0';
+	return (ptr);
 }

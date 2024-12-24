@@ -1,9 +1,9 @@
 NAME = pipex
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
-SRCS = ft_split.c ft_split_utils.c global_utils.c path_utils.c pipex.c pipex_exec.c pipex_utils.c
+SRCS = ft_split.c ft_split_utils.c global_utils.c path_utils.c pipex.c struct_utils.c pipex_utils.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

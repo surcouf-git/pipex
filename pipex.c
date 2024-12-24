@@ -6,79 +6,48 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:31:48 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/23 15:25:31 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/24 19:00:11 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	free_struct(t_list **node)
+int	exec_cmd_1(t_list **node)
 {
-
-	if ((*node)->cmd_1_opt != NULL)
+	(*node)->fork_1_id = fork();
+	if ((*node)->fork_1_id == 0)
 	{
-		printf("freeing : %p\n", (*node)->cmd_1_opt);
-		free_all((*node)->cmd_1_opt);
+		close((*node)->pipefd0);
+		dup2((*node)->fd_in, STDIN_FILENO);
+		dup2((*node)->pipefd1, STDOUT_FILENO);
+		close((*node)->fd_in);
+		close((*node)->pipefd1);
+		execve((*node)->path_cmd1, (*node)->cmd_1_opt, (*node)->envp);
+		perror((*node)->cmd_1_opt[0]);
+		exit(126);
 	}
-	if ((*node)->cmd_2_opt != NULL)
-	{
-		printf("freeing : %p\n", (*node)->cmd_2_opt);
-		free_all((*node)->cmd_2_opt);
-	}
-	if ((*node)->path_cmd1 != NULL)
-	{
-		printf("freeing : %p, %s\n", (*node)->path_cmd1, (*node)->path_cmd1);
-		free((*node)->path_cmd1);
-	}
-	if ((*node)->path_cmd2 != NULL)
-	{
-		printf("freeing : %p, %s\n", (*node)->path_cmd2, (*node)->path_cmd2);
-		free((*node)->path_cmd2);
-	}
-	if (*node != NULL)
-		free(*node);
+	else if ((*node)->fork_1_id < 0)
+		return (perror("Fork command 1"), 1);
+	return (0);
 }
 
-void	calloc_struct(t_list **node)
+int	exec_cmd_2(t_list **node)
 {
-	(*node)->argv = NULL;
-	(*node)->envp = NULL;
-	(*node)->cmd_1_opt = NULL;
-	(*node)->cmd_2_opt = NULL;
-	(*node)->path_cmd1 = NULL;
-	(*node)->path_cmd2 = NULL;
-	(*node)->infile = NULL;
-	(*node)->outfile = NULL;
-	(*node)->exec_cmd1 = 0;
-	(*node)->exec_cmd2 = 0;
-	(*node)->fd_in = 0;
-	(*node)->fd_out = 0;
-	(*node)->pipefd0 = 0;
-	(*node)->pipefd1 = 0;
-}
-
-void	init_struct(char **argv, char **envp, t_list **node)
-{
-	calloc_struct(node);
-	(*node)->argv = argv;
-	(*node)->envp = envp;
-	(*node)->cmd_1_opt = ft_split(argv[2], ' ');
-	for (int i = 0; (*node)->cmd_1_opt[i]; i++)
-		printf(">%s : %d<", (*node)->cmd_1_opt[i], i);
-	(*node)->cmd_2_opt = ft_split(argv[3], ' ');
-	(*node)->fd_in = open((*node)->argv[1], O_RDONLY);
-	if ((*node)->fd_in == -1)
-		perror((*node)->argv[1]);
-	else
-		(*node)->path_cmd1 = real_path(strndup((*node)->cmd_1_opt[0], strlen((*node)->cmd_1_opt[0])), envp);
-	printf("%p : %s~~~\n", (*node)->path_cmd1, (*node)->path_cmd1);
-	(*node)->fd_out = open((*node)->argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if ((*node)->fd_out == -1)
-		perror((*node)->argv[4]);
-	else
-		(*node)->path_cmd2 = real_path((*node)->cmd_2_opt[0], envp);
-	(*node)->infile = (*node)->argv[1];
-	(*node)->outfile = (*node)->argv[4];
+	(*node)->fork_2_id = fork();
+	if ((*node)->fork_2_id == 0)
+	{
+		close((*node)->pipefd1);
+		dup2((*node)->pipefd0, STDIN_FILENO);
+		dup2((*node)->fd_out, STDOUT_FILENO);
+		close((*node)->pipefd0);
+		close((*node)->fd_out);
+		execve((*node)->path_cmd2, (*node)->cmd_2_opt, (*node)->envp);
+		perror((*node)->cmd_2_opt[0]);
+		exit(126);
+	}
+	else if ((*node)->fork_2_id < 0)
+		return (perror("Fork command 2"), 1);
+	return (0);
 }
 
 static int	exec_all(t_list **node)
@@ -93,23 +62,46 @@ static int	exec_all(t_list **node)
 		exec_cmd_1(node);
 	if ((*node)->path_cmd2 != NULL && (*node)->fd_out != -1)
 		exec_cmd_2(node);
-	close((*node)->pipefd0);
-	close((*node)->pipefd1);
+	close_wait_and_check_status(node);
 	free_struct(node);
 	return (0);
 }
 
-int	main(int argc, char **argv, char **envp)
+t_list	*init_struct(char **argv, char **envp)
 {
-	(void)argc;
 	t_list	*node;
 
 	node = malloc(sizeof(t_list));
 	if (!node)
-		return (1);
-	init_struct(argv, envp, &node);
+		return (NULL);
+	calloc_struct(&node);
+	node->argv = argv;
+	node->envp = envp;
+	node->cmd_1_opt = ft_split(argv[2], ' ');
+	node->cmd_2_opt = ft_split(argv[3], ' ');
+	node->fd_in = open(node->argv[1], O_RDONLY);
+	if (node->fd_in == -1)
+		perror(node->argv[1]);
+	else
+		node->path_cmd1 = real_path(ft_strdup(node->cmd_1_opt[0]), envp);
+	node->fd_out = open(node->argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (node->fd_out == -1)
+		perror(node->argv[4]);
+	else
+		node->path_cmd2 = real_path(ft_strdup(node->cmd_2_opt[0]), envp);
+	node->infile = node->argv[1];
+	node->outfile = node->argv[4];
+	return (node);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_list	*node;
+
+	if (argc != 5)
+		return (ft_putstr("Usage : infile cmd1 cmd2 outfile\n"), 1);
+	node = init_struct(argv, envp);
 	if (!node)
 		return (ft_putstr("some memory allocation failed\n"), 1);
 	exec_all(&node);
-	return (0);
 }

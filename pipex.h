@@ -6,7 +6,7 @@
 /*   By: mvannest <mvannest@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:33:24 by mvannest          #+#    #+#             */
-/*   Updated: 2024/12/23 10:50:52 by mvannest         ###   ########.fr       */
+/*   Updated: 2024/12/24 17:26:01 by mvannest         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,30 @@ typedef struct s_list
 	int		fd_out;
 	int		pipefd0;
 	int		pipefd1;
+	int		status_1;
+	int		status_2;
+	pid_t	fork_1_id;
+	pid_t	fork_2_id;
 }	t_list;
 
-char	**parse_flags(char **argv, int cmd);
-char	*ft_strjoin_bin(char *str, char *join);
-int		ft_strlen(char *str);
-void	free_all(char **tab);
+/*********** exec fonctions ***********/
+char	*ft_strdup(char *str);
 int		exec_cmd_1(t_list **node);
 int		exec_cmd_2(t_list **node);
-/*
- * UTILS
- */
-char	*check_access(char **path, char *cmd);
+/*********** exec utils ***********/
 char	*real_path(char *cmd, char **envp);
+char	*check_access(char **path, char *cmd);
+char	*ft_strjoin_bin(char *str, char *join);
+void	close_wait_and_check_status(t_list **node);
+/*********** struct utils ***********/
+void	free_all(char **tab);
+void	free_struct(t_list **node);
+void	calloc_struct(t_list **node);
 char	**ft_split(const char *s, char c);
-int		ft_strncmp(char *argv, char *str, int nb);
+/*********** global utils ***********/
 int		ft_putstr(char *str);
+int		ft_strlen(char *str);
+int		ft_strncmp(char *argv, char *str, int nb);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 
 #endif
